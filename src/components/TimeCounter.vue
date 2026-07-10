@@ -1,25 +1,30 @@
 <template>
   <div class="timer">
+    <ModeSelector :current-mode="currentMode" @select="selectMode" />
     <div class="time">{{ formattedTime }}</div>
-    <div class="controls">
-      <button :disabled="isRunning" @click="start">Start</button>
-      <button :disabled="!isRunning" @click="stop">Stop</button>
-      <button :disabled="isRestartDisabled" @click="restart">Restart</button>
-    </div>
+    <TimerControls
+      :is-running="isRunning"
+      :is-restart-disabled="isRestartDisabled"
+      @start="start"
+      @stop="stop"
+      @restart="restart"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onUnmounted } from 'vue'
+import { MODE_DURATIONS, type Mode } from '@/constants/modes'
+import ModeSelector from './ModeSelector.vue'
+import TimerControls from './TimerControls.vue'
 
-const START_SECONDS = 25 * 60
-
-const totalSeconds = ref(START_SECONDS)
+const currentMode = ref<Mode>('pomodoro')
+const totalSeconds = ref(MODE_DURATIONS[currentMode.value])
 const intervalId = ref<number | undefined>(undefined)
 
 const isRunning = computed(() => intervalId.value !== undefined)
 
-const isRestartDisabled = computed(() => totalSeconds.value === START_SECONDS)
+const isRestartDisabled = computed(() => totalSeconds.value === MODE_DURATIONS[currentMode.value])
 
 const formattedTime = computed(() => {
   const minutes = Math.floor(totalSeconds.value / 60)
@@ -47,7 +52,13 @@ const stop = () => {
 
 const restart = () => {
   stop()
-  totalSeconds.value = START_SECONDS
+  totalSeconds.value = MODE_DURATIONS[currentMode.value]
+}
+
+const selectMode = (mode: Mode) => {
+  stop()
+  currentMode.value = mode
+  totalSeconds.value = MODE_DURATIONS[mode]
 }
 
 onUnmounted(stop)
@@ -63,22 +74,6 @@ onUnmounted(stop)
   .time {
     font-size: 4rem;
     font-family: monospace;
-  }
-
-  .controls {
-    display: flex;
-    gap: 0.5rem;
-
-    button {
-      padding: 0.5rem 1.5rem;
-      font-size: 1rem;
-      cursor: pointer;
-
-      &:disabled {
-        cursor: not-allowed;
-        opacity: 0.5;
-      }
-    }
   }
 }
 </style>
