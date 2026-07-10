@@ -13,10 +13,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onUnmounted } from 'vue'
-import { MODE_DURATIONS, type Mode } from '@/constants/modes'
+import { ref, computed, watchEffect, onUnmounted } from 'vue'
+import { MODE_DURATIONS, modes, type Mode } from '@/constants/modes'
 import ModeSelector from './ModeSelector.vue'
 import TimerControls from './TimerControls.vue'
+
+const DEFAULT_TITLE = document.title
 
 const currentMode = ref<Mode>('pomodoro')
 const totalSeconds = ref(MODE_DURATIONS[currentMode.value])
@@ -30,6 +32,16 @@ const formattedTime = computed(() => {
   const minutes = Math.floor(totalSeconds.value / 60)
   const seconds = totalSeconds.value % 60
   return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+})
+
+const currentModeLabel = computed(
+  () => modes.find((mode) => mode.key === currentMode.value)?.label,
+)
+
+watchEffect(() => {
+  document.title = isRunning.value
+    ? `${currentModeLabel.value}: ${formattedTime.value}`
+    : DEFAULT_TITLE
 })
 
 const start = () => {
@@ -61,7 +73,10 @@ const selectMode = (mode: Mode) => {
   totalSeconds.value = MODE_DURATIONS[mode]
 }
 
-onUnmounted(stop)
+onUnmounted(() => {
+  stop()
+  document.title = DEFAULT_TITLE
+})
 </script>
 
 <style scoped lang="scss">
