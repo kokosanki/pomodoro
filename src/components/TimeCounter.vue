@@ -42,6 +42,7 @@ useDocumentTitle(() =>
   justify-content: center;
   min-height: 100vh;
   gap: 1rem;
+  color: #eef1ff;
 
   .time {
     font-size: 4rem;
