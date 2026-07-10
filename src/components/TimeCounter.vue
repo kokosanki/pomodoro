@@ -29,7 +29,7 @@ const currentModeLabel = computed(
 )
 
 useDocumentTitle(() =>
-  isRunning.value ? `${currentModeLabel.value}: ${formattedTime.value}` : DEFAULT_TITLE,
+  isRunning.value ? `${formattedTime.value}: ${currentModeLabel.value}` : currentModeLabel.value || DEFAULT_TITLE,
 )
 </script>
 
