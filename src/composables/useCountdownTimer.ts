@@ -1,6 +1,7 @@
 import { ref, computed, onUnmounted } from 'vue'
 import { MODE_DURATIONS, type Mode } from '@/constants/modes'
 import { formatSeconds } from '@/services/timeFormat'
+import { playFinishSound } from '@/services/audio'
 
 export const useCountdownTimer = (initialMode: Mode = 'pomodoro') => {
   const currentMode = ref<Mode>(initialMode)
@@ -16,11 +17,11 @@ export const useCountdownTimer = (initialMode: Mode = 'pomodoro') => {
   const start = () => {
     if (isRunning.value) return
     intervalId.value = window.setInterval(() => {
+      totalSeconds.value--
       if (totalSeconds.value <= 0) {
         stop()
-        return
+        playFinishSound()
       }
-      totalSeconds.value--
     }, 1000)
   }
 
