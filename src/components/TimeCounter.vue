@@ -4,6 +4,7 @@
     <div class="controls">
       <button :disabled="isRunning" @click="start">Start</button>
       <button :disabled="!isRunning" @click="stop">Stop</button>
+      <button :disabled="isRestartDisabled" @click="restart">Restart</button>
     </div>
   </div>
 </template>
@@ -17,6 +18,8 @@ const totalSeconds = ref(START_SECONDS)
 const intervalId = ref<number | undefined>(undefined)
 
 const isRunning = computed(() => intervalId.value !== undefined)
+
+const isRestartDisabled = computed(() => totalSeconds.value === START_SECONDS)
 
 const formattedTime = computed(() => {
   const minutes = Math.floor(totalSeconds.value / 60)
@@ -40,6 +43,11 @@ const stop = () => {
     clearInterval(intervalId.value)
     intervalId.value = undefined
   }
+}
+
+const restart = () => {
+  stop()
+  totalSeconds.value = START_SECONDS
 }
 
 onUnmounted(stop)
