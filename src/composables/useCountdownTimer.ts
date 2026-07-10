@@ -14,6 +14,8 @@ export const useCountdownTimer = (initialMode: Mode = 'pomodoro') => {
 
   const formattedTime = computed(() => formatSeconds(totalSeconds.value))
 
+  const progress = computed(() => totalSeconds.value / MODE_DURATIONS[currentMode.value])
+
   const start = () => {
     if (isRunning.value) return
     intervalId.value = window.setInterval(() => {
@@ -59,6 +61,7 @@ export const useCountdownTimer = (initialMode: Mode = 'pomodoro') => {
     isRunning,
     isRestartDisabled,
     formattedTime,
+    progress,
     toggle,
     restart,
     selectMode,

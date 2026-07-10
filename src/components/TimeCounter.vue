@@ -1,7 +1,9 @@
 <template>
   <div class="timer">
     <ModeSelector :current-mode="currentMode" @select="selectMode" />
-    <div class="time">{{ formattedTime }}</div>
+    <ProgressRing :progress="progress">
+      <div class="time">{{ formattedTime }}</div>
+    </ProgressRing>
     <TimerControls
       :is-running="isRunning"
       :is-restart-disabled="isRestartDisabled"
@@ -18,11 +20,20 @@ import { useCountdownTimer } from '@/composables/useCountdownTimer'
 import { useDocumentTitle } from '@/composables/useDocumentTitle'
 import ModeSelector from './ModeSelector.vue'
 import TimerControls from './TimerControls.vue'
+import ProgressRing from './ProgressRing.vue'
 
 const DEFAULT_TITLE = document.title
 
-const { currentMode, isRunning, isRestartDisabled, formattedTime, toggle, restart, selectMode } =
-  useCountdownTimer()
+const {
+  currentMode,
+  isRunning,
+  isRestartDisabled,
+  formattedTime,
+  progress,
+  toggle,
+  restart,
+  selectMode,
+} = useCountdownTimer()
 
 const currentModeLabel = computed(
   () => modes.find((mode) => mode.key === currentMode.value)?.label,
