@@ -31,6 +31,14 @@ export const useCountdownTimer = (initialMode: Mode = 'pomodoro') => {
     }
   }
 
+  const toggle = () => {
+    if (isRunning.value) {
+      stop()
+    } else {
+      start()
+    }
+  }
+
   const restart = () => {
     stop()
     totalSeconds.value = MODE_DURATIONS[currentMode.value]
@@ -50,8 +58,7 @@ export const useCountdownTimer = (initialMode: Mode = 'pomodoro') => {
     isRunning,
     isRestartDisabled,
     formattedTime,
-    start,
-    stop,
+    toggle,
     restart,
     selectMode,
   }

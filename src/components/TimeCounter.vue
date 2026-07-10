@@ -5,8 +5,7 @@
     <TimerControls
       :is-running="isRunning"
       :is-restart-disabled="isRestartDisabled"
-      @start="start"
-      @stop="stop"
+      @toggle="toggle"
       @restart="restart"
     />
   </div>
@@ -22,7 +21,7 @@ import TimerControls from './TimerControls.vue'
 
 const DEFAULT_TITLE = document.title
 
-const { currentMode, isRunning, isRestartDisabled, formattedTime, start, stop, restart, selectMode } =
+const { currentMode, isRunning, isRestartDisabled, formattedTime, toggle, restart, selectMode } =
   useCountdownTimer()
 
 const currentModeLabel = computed(
