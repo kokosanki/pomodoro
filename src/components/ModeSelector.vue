@@ -24,11 +24,14 @@ const emit = defineEmits<{
 </script>
 
 <style scoped lang="scss">
+@use '../styles/button' as *;
+
 .modes {
   display: flex;
   gap: 0.5rem;
 
   button {
+    @include ghost-button;
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
     cursor: pointer;

@@ -1,0 +1,15 @@
+@mixin ghost-button {
+  background: transparent;
+  border: 2px solid #eef1ff;
+  border-radius: 999px;
+  color: #eef1ff;
+  font-weight: bold;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+
+  &:hover:not(:disabled) {
+    background-color: #eef1ff;
+    color: #1a1a2e;
+  }
+}
