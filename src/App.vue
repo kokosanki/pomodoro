@@ -6,4 +6,9 @@ import TimeCounter from './components/TimeCounter.vue'
   <TimeCounter />
 </template>
 
-<style scoped></style>
+<style lang="scss" scoped>
+:global(body) {
+  margin: 0;
+  padding: 0;
+}
+</style>
