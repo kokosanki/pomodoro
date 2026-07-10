@@ -13,55 +13,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onUnmounted } from 'vue'
-import { MODE_DURATIONS, type Mode } from '@/constants/modes'
+import { computed } from 'vue'
+import { modes } from '@/constants/modes'
+import { useCountdownTimer } from '@/composables/useCountdownTimer'
+import { useDocumentTitle } from '@/composables/useDocumentTitle'
 import ModeSelector from './ModeSelector.vue'
 import TimerControls from './TimerControls.vue'
 
-const currentMode = ref<Mode>('pomodoro')
-const totalSeconds = ref(MODE_DURATIONS[currentMode.value])
-const intervalId = ref<number | undefined>(undefined)
+const DEFAULT_TITLE = document.title
 
-const isRunning = computed(() => intervalId.value !== undefined)
+const { currentMode, isRunning, isRestartDisabled, formattedTime, start, stop, restart, selectMode } =
+  useCountdownTimer()
 
-const isRestartDisabled = computed(() => totalSeconds.value === MODE_DURATIONS[currentMode.value])
+const currentModeLabel = computed(
+  () => modes.find((mode) => mode.key === currentMode.value)?.label,
+)
 
-const formattedTime = computed(() => {
-  const minutes = Math.floor(totalSeconds.value / 60)
-  const seconds = totalSeconds.value % 60
-  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
-})
-
-const start = () => {
-  if (isRunning.value) return
-  intervalId.value = window.setInterval(() => {
-    if (totalSeconds.value <= 0) {
-      stop()
-      return
-    }
-    totalSeconds.value--
-  }, 1000)
-}
-
-const stop = () => {
-  if (intervalId.value !== undefined) {
-    clearInterval(intervalId.value)
-    intervalId.value = undefined
-  }
-}
-
-const restart = () => {
-  stop()
-  totalSeconds.value = MODE_DURATIONS[currentMode.value]
-}
-
-const selectMode = (mode: Mode) => {
-  stop()
-  currentMode.value = mode
-  totalSeconds.value = MODE_DURATIONS[mode]
-}
-
-onUnmounted(stop)
+useDocumentTitle(() =>
+  isRunning.value ? `${currentModeLabel.value}: ${formattedTime.value}` : DEFAULT_TITLE,
+)
 </script>
 
 <style scoped lang="scss">
