@@ -1,7 +1,6 @@
 <template>
   <div class="controls">
-    <button :disabled="isRunning" @click="emit('start')">Start</button>
-    <button :disabled="!isRunning" @click="emit('stop')">Stop</button>
+    <button @click="emit('toggle')">{{ isRunning ? 'Stop' : 'Start' }}</button>
     <button :disabled="isRestartDisabled" @click="emit('restart')">Restart</button>
   </div>
 </template>
@@ -13,8 +12,7 @@ defineProps<{
 }>()
 
 const emit = defineEmits<{
-  start: []
-  stop: []
+  toggle: []
   restart: []
 }>()
 </script>
